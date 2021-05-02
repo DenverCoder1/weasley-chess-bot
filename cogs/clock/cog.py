@@ -34,7 +34,7 @@ class ClockCog(commands.Cog, name="Clock"):
 			self.__message = await self.__channel.history().get(author__id=self.bot.user.id)
 		# if no messages found, send a new one
 		if not self.__message:
-			self.__message = await self.__message.send(embed=clock_embed())
+			self.__message = await self.__channel.send(embed=clock_embed())
 
 def setup(bot):
 	bot.add_cog(ClockCog(bot))
