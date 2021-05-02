@@ -18,6 +18,17 @@ class ClockCog(commands.Cog, name="Clock"):
 		self.clock.start()
 		print("Starting clock...")
 
+	@commands.Cog.listener()
+	async def on_message_delete(self, message: discord.Message):
+		"""Recreate message on deletion"""
+		# check id is the clock's message
+		if message.id == self.__message.id:
+			# get message if there's one in the past 2 messages
+			self.__message = await self.__channel.history(limit=2).get(author__id=self.bot.user.id)
+			# create new message if there's none
+			if not self.__message:
+				self.__message = await self.__channel.send(embed=clock_embed())
+
 	@loop(seconds=CHECK_INTERVAL_SECONDS)
 	async def clock(self):
 		"""loop to update clock"""
