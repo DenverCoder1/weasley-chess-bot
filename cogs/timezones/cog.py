@@ -107,7 +107,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         await ctx.defer()
         await timezones.time_diff(ctx, date, timezone)
 
-    @commands.command(aliases=["timeDiff", "diff", "time_until", "td"])
+    @commands.command(aliases=["timeDiff", "timediff", "diff", "time_until", "td"])
     async def time_diff(self, ctx: commands.Context, *args: str):
         """Find a time difference
         ```
