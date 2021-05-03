@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import Union
+from typing import Optional, Union
 
+import timeago
 from discord.ext import commands
 from discord_slash.context import SlashContext
 from utils.dates import format_date, get_clock_emoji, parse_date
@@ -10,7 +11,7 @@ from utils.embedder import build_embed, error_embed
 async def to_utc(ctx: Union[commands.Context, SlashContext], date_input: str):
     new_date = parse_date(date_input, to_tz="UTC")
     if isinstance(new_date, datetime) and parse_date(date_input).tzinfo:
-        return await embed_time(ctx, new_date, date_input)
+        return await __send_time_embed(ctx, new_date, date_input)
     # unable to parse date
     embed = error_embed(
         f"Sorry {ctx.author.name}, I didn't understand that.",
@@ -25,7 +26,7 @@ async def from_utc(
     new_date = parse_date(date_str, from_tz="UTC", to_tz=to_tz)
     if isinstance(new_date, datetime):
         date_input = date_str if "UTC" in date_str else f"{date_str} (UTC)"
-        return await embed_time(ctx, new_date, date_input, to_tz)
+        return await __send_time_embed(ctx, new_date, date_input, to_tz)
     # unable to parse date
     embed = error_embed(
         f"Sorry {ctx.author.name}, I didn't understand that.",
@@ -34,7 +35,23 @@ async def from_utc(
     await ctx.send(embed=embed)
 
 
-async def embed_time(
+async def time_diff(
+    ctx: Union[commands.Context, SlashContext],
+    date_input: str,
+    timezone: Optional[str] = None,
+):
+    new_date = parse_date(date_input, from_tz=timezone).replace(tzinfo=None)
+    if isinstance(new_date, datetime):
+        return await __send_diff_embed(ctx, new_date)
+    # unable to parse date
+    embed = error_embed(
+        f"Sorry {ctx.author.name}, I didn't understand that.",
+        "Make sure to include a valid date. Use `w!help timeDiff` for more info.",
+    )
+    await ctx.send(embed=embed)
+
+
+async def __send_time_embed(
     ctx: Union[commands.Context, SlashContext],
     date_output: datetime,
     date_input: str,
@@ -44,5 +61,16 @@ async def embed_time(
     embed = build_embed(
         title=f"{clock} {format_date(date_output)} {timezone}",
         description=(f'Converted to {timezone} from "{date_input}"'),
+    )
+    await ctx.send(embed=embed)
+
+
+async def __send_diff_embed(
+    ctx: Union[commands.Context, SlashContext], date_output: datetime
+):
+    clock = get_clock_emoji(date_output)
+    embed = build_embed(
+        title=f'{clock} Time until "{format_date(date_output)}"',
+        description=f"{timeago.format(date_output).capitalize()}",
     )
     await ctx.send(embed=embed)

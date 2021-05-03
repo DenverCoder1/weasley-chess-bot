@@ -81,6 +81,41 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
             )
             await ctx.send(embed=embed)
 
+    @cog_ext.cog_slash(
+        name="time_diff",
+        description=("Get the amount of time until a date occurs"),
+        guild_ids=[config.GUILD_ID],
+        options=[
+            create_option(
+                name="date",
+                description="Date or time to subtract (eg. 29 May 3am)",
+                option_type=SlashCommandOptionType.STRING,
+                required=True,
+            ),
+            create_option(
+                name="timezone",
+                description="Timezone (eg. '-0500', 'EST') - defaults to UTC",
+                option_type=SlashCommandOptionType.STRING,
+                required=False,
+            ),
+        ],
+    )
+    async def time_diff_slash(
+        self, ctx: SlashContext, date: str, timezone: str = "UTC"
+    ):
+        """Slash command: Find a time difference"""
+        await ctx.defer()
+        await timezones.time_diff(ctx, date, timezone)
+
+    @commands.command(aliases=["timeDiff", "diff", "time_until", "td"])
+    async def time_diff(self, ctx: commands.Context, *args: str):
+        """Find a time difference
+        ```
+        w!timeDiff 5/29 13:00
+        ```
+        """
+        await timezones.time_diff(ctx, " ".join(args))
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Timezones(bot))

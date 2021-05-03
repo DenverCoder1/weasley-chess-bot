@@ -21,7 +21,9 @@ class Random(commands.Cog, name="🎲 Random"):
         """Slash command: replies with "Heads" or "Tails" at random."""
         await flip_coin(ctx)
 
-    @commands.command(aliases=["flip", "coin", "coinflip", "flipcoin", "flip_coin"])
+    @commands.command(
+        aliases=["flip", "coin", "coinflip", "flipcoin", "flip_coin", "cf", "fc"]
+    )
     async def coin_flip(self, ctx: commands.Context):
         """Replies with "Heads" or "Tails" at random.
         ```
@@ -53,7 +55,9 @@ class Random(commands.Cog, name="🎲 Random"):
         """Slash command: Takes names of both players and assigns "White" to one and "Black" to the other."""
         await swap_pawns(ctx, player_1, player_2)
 
-    @commands.command(aliases=["pawn", "swap", "swappawns", "pawnswap", "swap_pawns"])
+    @commands.command(
+        aliases=["pawn", "swap", "swappawns", "pawnswap", "swap_pawns", "ps", "sp"]
+    )
     async def pawn_swap(self, ctx: commands.Context, player_1: str, player_2: str):
         """Takes names of both players and assigns "White" to one and "Black" to the other.
         ```
