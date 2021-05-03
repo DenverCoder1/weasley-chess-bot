@@ -11,17 +11,17 @@ class Random(commands.Cog, name="🎲 Random"):
         self.bot = bot
 
     @cog_ext.cog_slash(
-        name="coinflip",
+        name="coin_flip",
         description=("Flip a coin."),
         guild_ids=[config.GUILD_ID],
         options=[],
     )
-    async def coinflip_slash(self, ctx: SlashContext):
+    async def coin_flip_slash(self, ctx: SlashContext):
         """Slash command: replies "Heads" or "Tails" at random."""
         await flip_coin(ctx)
 
-    @commands.command(aliases=["flip", "coin", "flipcoin", "flip_coin"])
-    async def coinflip(self, ctx: commands.Context):
+    @commands.command(aliases=["flip", "coin", "coinflip", "flipcoin", "flip_coin"])
+    async def coin_flip(self, ctx: commands.Context):
         """Replies "Heads" or "Tails" at random.
         ```
         w!coinflip
@@ -30,7 +30,7 @@ class Random(commands.Cog, name="🎲 Random"):
         await flip_coin(ctx)
 
     @cog_ext.cog_slash(
-        name="pawnswap",
+        name="pawn_swap",
         description=("Swap pawns between two players."),
         guild_ids=[config.GUILD_ID],
         options=[
@@ -48,12 +48,12 @@ class Random(commands.Cog, name="🎲 Random"):
             ),
         ],
     )
-    async def pawnswap_slash(self, ctx: SlashContext, player_1: str, player_2: str):
+    async def pawn_swap_slash(self, ctx: SlashContext, player_1: str, player_2: str):
         """Slash command: Takes names of both players and assigns "White" to one and "Black" to the other."""
         await swap_pawns(ctx, player_1, player_2)
 
-    @commands.command(aliases=["pawn", "swap", "swappawns", "pawn_swap", "swap_pawns"])
-    async def pawnswap(self, ctx: commands.Context, player_1: str, player_2: str):
+    @commands.command(aliases=["pawn", "swap", "swappawns", "pawnswap", "swap_pawns"])
+    async def pawn_swap(self, ctx: commands.Context, player_1: str, player_2: str):
         """Takes names of both players and assigns "White" to one and "Black" to the other.
         ```
         w!pawnswap Eyl Panda

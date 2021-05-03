@@ -1,3 +1,4 @@
+from typing import Tuple
 import config
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
@@ -13,7 +14,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
 
     @cog_ext.cog_slash(
         name="to_utc",
-        description=("Convert a date/time to UTC."),
+        description=("Convert a date/time to UTC"),
         guild_ids=[config.GUILD_ID],
         options=[
             create_option(
@@ -28,14 +29,53 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         """Slash command: Convert a time from your timezone to UTC time."""
         await timezones.to_utc(ctx, time)
 
-    @commands.command(aliases=["toUTC", "toutc", "utc"])
+    @commands.command(aliases=["toUTC", "toutc", "utc", "to"])
     async def to_utc(self, ctx: commands.Context, *args):
         """Convert a time from your timezone to UTC time
         ```
         w!toUTC 5/29 13:00 IST
         ```
         """
-        await timezones.to_utc(ctx, args.join(" "))
+        await timezones.to_utc(ctx, " ".join(args))
+
+    @cog_ext.cog_slash(
+        name="from_utc",
+        description=("Convert a date/time to your timezone from UTC"),
+        guild_ids=[config.GUILD_ID],
+        options=[
+            create_option(
+                name="utc_time",
+                description="UTC date or time to convert",
+                option_type=SlashCommandOptionType.STRING,
+                required=True,
+            ),
+            create_option(
+                name="to",
+                description="Timezone that you want to convert to",
+                option_type=SlashCommandOptionType.STRING,
+                required=True,
+            ),
+        ],
+    )
+    async def from_utc_slash(self, ctx: SlashContext, utc_time: str, to: str):
+        """Slash command: Convert a time from your timezone to UTC time."""
+        await timezones.from_utc(ctx, utc_time, to)
+
+    @commands.command(aliases=["fromUTC", "fromutc", "from"])
+    async def from_utc(self, ctx: commands.Context, *args: str):
+        """Convert a time from your timezone to UTC time
+        ```
+        w!fromUTC 5/29 13:00 to MST
+        ```
+        """
+        try:
+            [utc_time, to] = " ".join(args).split(" to ", 1)
+            await timezones.from_utc(ctx, utc_time, to)
+        except ValueError:
+            ctx.send(
+                "Make sure to specify the date and target timezone.\n"
+                "Use `w!help fromUTC` for more info."
+            )
 
 
 def setup(bot: commands.Bot):

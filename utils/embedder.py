@@ -10,6 +10,14 @@ def __trim(text: str, limit: int) -> str:
     return text[: limit - 3].strip() + "..." if len(text) > limit else text
 
 
+def error_embed(title: str, description: Optional[str] = None) -> discord.Embed:
+    """Embed a message with a title and a red highlight"""
+    # create the embed
+    return build_embed(
+        title=title, description=description, colour=discord.Colour.red()
+    )
+
+
 def build_embed(
     title: str,
     description: Optional[str] = None,
