@@ -18,12 +18,12 @@ class Random(commands.Cog, name="🎲 Random"):
         options=[],
     )
     async def coin_flip_slash(self, ctx: SlashContext):
-        """Slash command: replies "Heads" or "Tails" at random."""
+        """Slash command: replies with "Heads" or "Tails" at random."""
         await flip_coin(ctx)
 
     @commands.command(aliases=["flip", "coin", "coinflip", "flipcoin", "flip_coin"])
     async def coin_flip(self, ctx: commands.Context):
-        """Replies "Heads" or "Tails" at random.
+        """Replies with "Heads" or "Tails" at random.
         ```
         w!coinflip
         ```
