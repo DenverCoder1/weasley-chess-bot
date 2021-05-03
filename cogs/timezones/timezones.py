@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from typing import Optional, Union
 
@@ -6,9 +7,13 @@ from discord.ext import commands
 from discord_slash.context import SlashContext
 from utils.dates import format_date, get_clock_emoji, parse_date
 from utils.embedder import build_embed, error_embed
+import re
 
 
 async def to_utc(ctx: Union[commands.Context, SlashContext], date_input: str):
+    # Use UTC+1 for BST instead of the default
+    date_input = re.sub(r" BST", " +0100", date_input, flags=re.IGNORECASE)
+    # parse the date
     new_date = parse_date(date_input, to_tz="UTC")
     if isinstance(new_date, datetime) and parse_date(date_input).tzinfo:
         return await __send_time_embed(ctx, new_date, date_input)
