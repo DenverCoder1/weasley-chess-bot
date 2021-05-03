@@ -12,6 +12,8 @@ Discord bot for Ravenclaw Chess Club server
 
 * **Convert to UTC** (`w!toUTC`) - Convert date/time to UTC given the timezone
 * **Convert from UTC** (`w!fromUTC`) - Convert from UTC to a given timezone
+* **Time Difference** (`w!timeDiff`) - Displays how long until a date (or how long since)
+* **Timezone info** (`w!tzinfo`) - Displays the UTC offset for a timezone given by its abbreviation
 
 ### Random
 

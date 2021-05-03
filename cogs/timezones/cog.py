@@ -118,7 +118,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
 
     @cog_ext.cog_slash(
         name="tzinfo",
-        description=("Get info about a timezone"),
+        description=("Get information about a timezone"),
         guild_ids=[config.GUILD_ID],
         options=[
             create_option(
@@ -130,7 +130,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         ],
     )
     async def tzinfo_slash(self, ctx: SlashContext, timezone: str = "UTC"):
-        """Slash command: Find a time difference"""
+        """Slash command: Find information about a timezone"""
         await ctx.defer()
         await timezones.send_tzinfo(ctx, timezone)
 
