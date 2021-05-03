@@ -50,7 +50,7 @@ class Random(commands.Cog, name="🎲 Random"):
             ),
         ],
     )
-    async def pawnswap(self, ctx: SlashContext, player_1: str, player_2: str):
+    async def pawnswap_slash(self, ctx: SlashContext, player_1: str, player_2: str):
         """Slash command: Takes names of both players and assigns "White" to one and "Black" to the other."""
         await swap_pawns(ctx, player_1, player_2)
 
