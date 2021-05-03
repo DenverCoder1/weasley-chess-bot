@@ -1,20 +1,16 @@
-import discord
 from datetime import datetime
-from discord.ext import commands
-from utils.embedder import build_embed
 
-__clock_emoji = "🕛🕧🕐🕜🕑🕝🕒🕞🕓🕟🕔🕠🕕🕡🕖🕢🕗🕣🕘🕤🕙🕥🕚🕦"
+import discord
+from discord.ext import commands
+from utils.dates import get_clock_emoji, format_date
+from utils.embedder import build_embed
 
 
 def clock_embed() -> discord.Embed:
     """Generates embed with current time UTC"""
     now = datetime.utcnow()
-    clock = __clock_emoji[
-        round(2 * (now.hour % 12 + now.minute / 60)) % len(__clock_emoji)
-    ]
-    return build_embed(
-        title=f"{clock} The current time is {now.strftime('%d %B %H:%M UTC')}"
-    )
+    clock = get_clock_emoji(now)
+    return build_embed(title=f"{clock} The current time is {format_date(now)} UTC")
 
 
 async def get_or_create_embed(

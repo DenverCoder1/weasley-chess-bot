@@ -1,4 +1,3 @@
-from typing import Union
 from .random import flip_coin, swap_pawns
 from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
@@ -17,7 +16,6 @@ class Random(commands.Cog, name="🎲 Random"):
         guild_ids=[config.GUILD_ID],
         options=[],
     )
-    @commands.command(aliases=["flip", "coin", "flipcoin", "flip_coin"])
     async def coinflip_slash(self, ctx: SlashContext):
         """Slash command: replies "Heads" or "Tails" at random."""
         await flip_coin(ctx)
@@ -26,7 +24,7 @@ class Random(commands.Cog, name="🎲 Random"):
     async def coinflip(self, ctx: commands.Context):
         """Replies "Heads" or "Tails" at random.
         ```
-        -coinflip
+        w!coinflip
         ```
         """
         await flip_coin(ctx)
@@ -58,7 +56,7 @@ class Random(commands.Cog, name="🎲 Random"):
     async def pawnswap(self, ctx: commands.Context, player_1: str, player_2: str):
         """Takes names of both players and assigns "White" to one and "Black" to the other.
         ```
-        -pawnswap Eyl Panda
+        w!pawnswap Eyl Panda
         ```
         """
         await swap_pawns(ctx, player_1, player_2)
