@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, Union
 
-import timeago
+import humanize
 from discord.ext import commands
 from discord_slash.context import SlashContext
 from utils.dates import format_date, get_clock_emoji, parse_date
@@ -41,7 +41,7 @@ async def time_diff(
     date_input: str,
     timezone: Optional[str] = None,
 ):
-    new_date = parse_date(date_input, from_tz=timezone).replace(tzinfo=None)
+    new_date = parse_date(date_input, from_tz=timezone, to_tz="UTC")
     if isinstance(new_date, datetime):
         return await __send_diff_embed(ctx, new_date)
     # unable to parse date
@@ -70,9 +70,14 @@ async def __send_diff_embed(
     ctx: Union[commands.Context, SlashContext], date_output: datetime
 ):
     clock = get_clock_emoji(date_output)
+    difference = humanize.precisedelta(
+        date_output - datetime.utcnow(),
+        minimum_unit="seconds",
+        format="%d",
+    )
     embed = build_embed(
         title=f'{clock} Time until "{format_date(date_output)}"',
-        description=f"{timeago.format(date_output).capitalize()}",
+        description=difference,
     )
     await ctx.send(embed=embed)
 
