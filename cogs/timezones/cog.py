@@ -19,7 +19,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         options=[
             create_option(
                 name="time",
-                description="Date or time including timezone (eg. '5/29 1am -0500', '5pm EST')",
+                description="Date or time including timezone (eg. '5/29 1am -0500', '29 May 17:00 EST')",
                 option_type=SlashCommandOptionType.STRING,
                 required=True,
             )
