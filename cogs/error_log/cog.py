@@ -8,6 +8,7 @@ class ErrorLogCog(commands.Cog, name="Error Logs"):
 		self.bot = bot
 
 	@commands.command(name="logs")
+	@commands.has_permissions(administrator=True)
 	async def logs(self, ctx, num_lines: int = 50):
 		"""Show recent logs from err.log"""
 		# log in console that a ping was received
