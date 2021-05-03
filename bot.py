@@ -26,6 +26,7 @@ def main():
     async def on_ready():
         """When discord is connected"""
         print(f"{bot.user.name} has connected to Discord!")
+        await bot.change_presence(activity=discord.Game("w!help"))
 
     # Run Discord bot
     bot.run(config.DISCORD_TOKEN)

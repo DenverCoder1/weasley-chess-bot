@@ -27,7 +27,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
     )
     async def to_utc_slash(self, ctx: SlashContext, time: str):
         """Slash command: Convert a time from your timezone to UTC time."""
-        ctx.defer()
+        await ctx.defer()
         await timezones.to_utc(ctx, time)
 
     @commands.command(aliases=["toUTC", "toutc", "utc", "to"])
@@ -60,7 +60,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
     )
     async def from_utc_slash(self, ctx: SlashContext, utc_time: str, to: str):
         """Slash command: Convert a time from your timezone to UTC time."""
-        ctx.defer()
+        await ctx.defer()
         await timezones.from_utc(ctx, utc_time, to)
 
     @commands.command(aliases=["fromUTC", "fromutc", "from"])
