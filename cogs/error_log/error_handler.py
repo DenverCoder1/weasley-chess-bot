@@ -1,7 +1,8 @@
 import traceback
+from datetime import datetime
+
 from discord import logging
 from discord.ext.commands import errors
-from datetime import datetime
 
 
 class ErrorHandler:

@@ -1,10 +1,10 @@
+import config
 import discord
 from discord.errors import HTTPException
-from discord.ext.tasks import loop
 from discord.ext import commands
-from .clock_embed import clock_embed, get_or_create_embed
+from discord.ext.tasks import loop
 
-import config
+from .clock_embed import clock_embed, get_or_create_embed
 
 CHECK_INTERVAL_SECONDS = 60  # every 60 seconds
 

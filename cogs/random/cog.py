@@ -1,9 +1,10 @@
-from .random import flip_coin, swap_pawns
+import config
 from discord.ext import commands
-from discord_slash import cog_ext, SlashContext
+from discord_slash import SlashContext, cog_ext
 from discord_slash.model import SlashCommandOptionType
 from discord_slash.utils.manage_commands import create_option
-import config
+
+from .random import flip_coin, swap_pawns
 
 
 class Random(commands.Cog, name="🎲 Random"):

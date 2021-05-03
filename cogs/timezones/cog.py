@@ -1,9 +1,9 @@
-from typing import Tuple
 import config
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
 from discord_slash.model import SlashCommandOptionType
 from discord_slash.utils.manage_commands import create_option
+from utils.embedder import error_embed
 
 from . import timezones
 
@@ -72,10 +72,12 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
             [utc_time, to] = " ".join(args).split(" to ", 1)
             await timezones.from_utc(ctx, utc_time, to)
         except ValueError:
-            ctx.send(
-                "Make sure to specify the date and target timezone.\n"
-                "Use `w!help fromUTC` for more info."
+            # unable to split date
+            embed = error_embed(
+                f"Sorry {ctx.author.name}, I didn't understand that.",
+                "Make sure to include a date and target timezone. Use `w!help fromUTC` for more info.",
             )
+            await ctx.send(embed=embed)
 
 
 def setup(bot: commands.Bot):

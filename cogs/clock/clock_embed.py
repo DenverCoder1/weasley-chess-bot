@@ -2,7 +2,7 @@ from datetime import datetime
 
 import discord
 from discord.ext import commands
-from utils.dates import get_clock_emoji, format_date
+from utils.dates import format_date, get_clock_emoji
 from utils.embedder import build_embed
 
 

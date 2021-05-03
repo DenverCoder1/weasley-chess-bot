@@ -1,6 +1,7 @@
 import sys
-from discord.ext import commands
+
 from cogs.error_log.error_handler import ErrorHandler
+from discord.ext import commands
 
 
 class ErrorLogCog(commands.Cog, name="📝 Error Logs"):
