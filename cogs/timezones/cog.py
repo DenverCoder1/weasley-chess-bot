@@ -116,6 +116,33 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         """
         await timezones.time_diff(ctx, " ".join(args))
 
+    @cog_ext.cog_slash(
+        name="tzinfo",
+        description=("Get info about a timezone"),
+        guild_ids=[config.GUILD_ID],
+        options=[
+            create_option(
+                name="timezone",
+                description="Timezone abbreviation (eg. BST)",
+                option_type=SlashCommandOptionType.STRING,
+                required=True,
+            ),
+        ],
+    )
+    async def tzinfo_slash(self, ctx: SlashContext, timezone: str = "UTC"):
+        """Slash command: Find a time difference"""
+        await ctx.defer()
+        await timezones.send_tzinfo(ctx, timezone)
+
+    @commands.command(aliases=["tzInfo", "timezone", "tz_info", "tz"])
+    async def tzinfo(self, ctx: commands.Context, timezone: str):
+        """Find information about a timezone
+        ```
+        w!tzinfo BST
+        ```
+        """
+        await timezones.send_tzinfo(ctx, timezone)
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Timezones(bot))
