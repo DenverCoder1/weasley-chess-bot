@@ -1,5 +1,6 @@
 import discord
 import os
+from discord_slash import SlashCommand
 from discord.ext import commands
 import config
 
@@ -11,20 +12,23 @@ def main():
     intents.guilds = True
     intents.members = True
 
-    client = commands.Bot(config.BOT_PREFIX, intents=intents)  # bot command prefix
+    bot = commands.Bot(config.BOT_PREFIX, intents=intents)  # bot command prefix
+
+    # slash commands
+    setattr(bot, "slash", SlashCommand(bot, override_type=True, sync_commands=True))
 
     # Get the modules of all cogs whose directory structure is modules/<module_name>/cog.py
     for folder in os.listdir("cogs"):
         if os.path.exists(os.path.join("cogs", folder, "cog.py")):
-            client.load_extension(f"cogs.{folder}.cog")
+            bot.load_extension(f"cogs.{folder}.cog")
 
-    @client.event
+    @bot.event
     async def on_ready():
         """When discord is connected"""
-        print(f"{client.user.name} has connected to Discord!")
+        print(f"{bot.user.name} has connected to Discord!")
 
     # Run Discord bot
-    client.run(config.DISCORD_TOKEN)
+    bot.run(config.DISCORD_TOKEN)
 
 
 if __name__ == "__main__":

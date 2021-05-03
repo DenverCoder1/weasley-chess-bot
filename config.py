@@ -5,7 +5,7 @@ load_dotenv()
 
 # Discord config
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-BOT_PREFIX = "-"
+BOT_PREFIX = "w!"
 
 # Guild
 GUILD_ID = int(os.getenv("GUILD_ID"))

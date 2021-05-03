@@ -9,7 +9,7 @@ import config
 CHECK_INTERVAL_SECONDS = 60  # every 60 seconds
 
 
-class ClockCog(commands.Cog, name="Clock"):
+class Clock(commands.Cog, name="🕒 Clock"):
     def __init__(self, bot: commands.Bot):
         self.__bot = bot
 
@@ -44,4 +44,4 @@ class ClockCog(commands.Cog, name="Clock"):
 
 
 def setup(bot):
-    bot.add_cog(ClockCog(bot))
+    bot.add_cog(Clock(bot))
