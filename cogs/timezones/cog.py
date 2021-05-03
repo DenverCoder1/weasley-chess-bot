@@ -19,7 +19,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         options=[
             create_option(
                 name="time",
-                description="Date or time to convert including the time zone",
+                description="Date or time including timezone (eg. '5/29 1am -0500', '5pm EST')",
                 option_type=SlashCommandOptionType.STRING,
                 required=True,
             )
@@ -27,6 +27,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
     )
     async def to_utc_slash(self, ctx: SlashContext, time: str):
         """Slash command: Convert a time from your timezone to UTC time."""
+        ctx.defer()
         await timezones.to_utc(ctx, time)
 
     @commands.command(aliases=["toUTC", "toutc", "utc", "to"])
@@ -45,13 +46,13 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         options=[
             create_option(
                 name="utc_time",
-                description="UTC date or time to convert",
+                description="UTC date or time to convert (eg. 29 May 3am)",
                 option_type=SlashCommandOptionType.STRING,
                 required=True,
             ),
             create_option(
                 name="to",
-                description="Timezone that you want to convert to",
+                description="Timezone that you want to convert to (eg. '-0500', 'EST')",
                 option_type=SlashCommandOptionType.STRING,
                 required=True,
             ),
@@ -59,6 +60,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
     )
     async def from_utc_slash(self, ctx: SlashContext, utc_time: str, to: str):
         """Slash command: Convert a time from your timezone to UTC time."""
+        ctx.defer()
         await timezones.from_utc(ctx, utc_time, to)
 
     @commands.command(aliases=["fromUTC", "fromutc", "from"])

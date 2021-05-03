@@ -1,11 +1,13 @@
 from datetime import datetime
+from typing import Union
 
 from discord.ext import commands
+from discord_slash.context import SlashContext
 from utils.dates import format_date, get_clock_emoji, parse_date
 from utils.embedder import build_embed, error_embed
 
 
-async def to_utc(ctx: commands.Context, date_input: str):
+async def to_utc(ctx: Union[commands.Context, SlashContext], date_input: str):
     new_date = parse_date(date_input, to_tz="UTC")
     if isinstance(new_date, datetime) and parse_date(date_input).tzinfo:
         return await embed_time(ctx, new_date, date_input)
@@ -17,7 +19,9 @@ async def to_utc(ctx: commands.Context, date_input: str):
     await ctx.send(embed=embed)
 
 
-async def from_utc(ctx: commands.Context, date_str: str, to_tz: str):
+async def from_utc(
+    ctx: Union[commands.Context, SlashContext], date_str: str, to_tz: str
+):
     new_date = parse_date(date_str, from_tz="UTC", to_tz=to_tz)
     if isinstance(new_date, datetime):
         date_input = date_str if "UTC" in date_str else f"{date_str} (UTC)"
@@ -31,7 +35,10 @@ async def from_utc(ctx: commands.Context, date_str: str, to_tz: str):
 
 
 async def embed_time(
-    ctx: commands.Context, date_output: datetime, date_input: str, timezone: str = "UTC"
+    ctx: Union[commands.Context, SlashContext],
+    date_output: datetime,
+    date_input: str,
+    timezone: str = "UTC",
 ):
     clock = get_clock_emoji(date_output)
     embed = build_embed(
