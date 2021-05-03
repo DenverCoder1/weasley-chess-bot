@@ -1,16 +1,17 @@
 import discord
+from discord.errors import HTTPException
 from discord.ext.tasks import loop
 from discord.ext import commands
-from .clock_embed import clock_embed
+from .clock_embed import clock_embed, get_or_create_embed
 
 import config
 
-CHECK_INTERVAL_SECONDS = 60  # every minute
+CHECK_INTERVAL_SECONDS = 60  # every 60 seconds
 
 
 class ClockCog(commands.Cog, name="Clock"):
     def __init__(self, bot: commands.Bot):
-        self.bot = bot
+        self.__bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -19,38 +20,27 @@ class ClockCog(commands.Cog, name="Clock"):
         self.clock.start()
         print("Starting clock...")
 
-    @commands.Cog.listener()
-    async def on_message_delete(self, message: discord.Message):
-        """Recreate message on deletion"""
-        # check id is the clock's message
-        if message.id == self.__message.id:
-            # get message if there's one in the past 2 messages
-            self.__message = await self.__channel.history(limit=2).get(
-                author__id=self.bot.user.id
-            )
-            # create new message if there's none
-            if not self.__message:
-                self.__message = await self.__channel.send(embed=clock_embed())
-
     @loop(seconds=CHECK_INTERVAL_SECONDS)
     async def clock(self):
         """loop to update clock"""
         # update the clock
-        await self.__message.edit(embed=clock_embed())
+        try:
+            await self.__message.edit(embed=clock_embed())
+        except HTTPException:
+            self.__message = await get_or_create_embed(self.__bot, self.__channel)
 
     @clock.before_loop
     async def clock_init(self):
         """print startup info before reddit feed loop begins"""
         # get clock channel object
-        self.__channel = self.bot.get_channel(config.CLOCK_CHANNEL_ID)
+        self.__channel = self.__bot.get_channel(config.CLOCK_CHANNEL_ID)
         # if channel exists, get the last message from the bot
         if isinstance(self.__channel, discord.TextChannel):
-            self.__message = await self.__channel.history().get(
-                author__id=self.bot.user.id
-            )
-        # if no messages found, send a new one
-        if not self.__message:
-            self.__message = await self.__channel.send(embed=clock_embed())
+            # find the last message from the bot in the channel or create a new one
+            self.__message = await get_or_create_embed(self.__bot, self.__channel)
+            return
+        # error
+        print("Couldn't find that channel.")
 
 
 def setup(bot):
