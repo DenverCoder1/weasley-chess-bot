@@ -29,8 +29,9 @@ def parse_date(
     """
     if date_str is None:
         return None
-    # Use UTC+1 for BST instead of the default
+    # Override timezone abbreviations
     date_str = re.sub(r" BST", " +0100", date_str, flags=re.IGNORECASE)
+    date_str = re.sub(r" IST", " +0530", date_str, flags=re.IGNORECASE)
     # set dateparser settings
     settings: Dict[str, Any] = {
         "RELATIVE_BASE": base.replace(tzinfo=None),
