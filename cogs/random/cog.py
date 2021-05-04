@@ -11,8 +11,9 @@ class Random(commands.Cog, name="🎲 Random"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(
-        name="coin_flip",
+    @cog_ext.cog_subcommand(
+        base="coin",
+        name="flip",
         description=("Flip a coin."),
         guild_ids=[config.GUILD_ID],
         options=[],
@@ -32,8 +33,9 @@ class Random(commands.Cog, name="🎲 Random"):
         """
         await flip_coin(ctx)
 
-    @cog_ext.cog_slash(
-        name="pawn_swap",
+    @cog_ext.cog_subcommand(
+        base="pawn",
+        name="swap",
         description=("Swap pawns between two players."),
         guild_ids=[config.GUILD_ID],
         options=[

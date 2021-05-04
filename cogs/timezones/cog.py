@@ -12,8 +12,9 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(
-        name="to_utc",
+    @cog_ext.cog_subcommand(
+        base="to",
+        name="utc",
         description=("Convert a date/time to UTC"),
         guild_ids=[config.GUILD_ID],
         options=[
@@ -39,8 +40,9 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         """
         await timezones.to_utc(ctx, " ".join(args))
 
-    @cog_ext.cog_slash(
-        name="from_utc",
+    @cog_ext.cog_subcommand(
+        base="from",
+        name="utc",
         description=("Convert a date/time to your timezone from UTC"),
         guild_ids=[config.GUILD_ID],
         options=[
@@ -81,8 +83,9 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
             )
             await ctx.send(embed=embed)
 
-    @cog_ext.cog_slash(
-        name="time_diff",
+    @cog_ext.cog_subcommand(
+        base="time",
+        name="diff",
         description=("Get the amount of time until a date occurs"),
         guild_ids=[config.GUILD_ID],
         options=[
@@ -116,8 +119,9 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         """
         await timezones.time_diff(ctx, " ".join(args))
 
-    @cog_ext.cog_slash(
-        name="tzinfo",
+    @cog_ext.cog_subcommand(
+        base="tz",
+        name="info",
         description=("Get information about a timezone"),
         guild_ids=[config.GUILD_ID],
         options=[
