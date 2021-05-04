@@ -76,8 +76,12 @@ async def __send_diff_embed(
         format="%d",
     )
     embed = build_embed(
-        title=f'{clock} Time until "{format_date(date_output)}"',
-        description=difference,
+        title=f"{clock} Time until {format_date(date_output)} UTC",
+        description=(
+            f"In {difference}"
+            if date_output > datetime.utcnow()
+            else f"{difference} ago"
+        ),
     )
     await ctx.send(embed=embed)
 
