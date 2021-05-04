@@ -51,7 +51,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 ],
             ),
             create_option(
-                name="player_1_color",
+                name="color",
                 description="Color the first player to join will play (defaults to Random)",
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
@@ -68,7 +68,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         ctx: SlashContext,
         minutes: int = 10,
         increment: int = 10,
-        player_1_color: str = Color.RANDOM.value,
+        color: str = Color.RANDOM.value,
         variant: int = Variant.STANDARD.value,
     ):
         """Slash command: Create a live game on Lichess with custom settings"""
@@ -80,7 +80,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         await lichess.send_invite(
             ctx,
             time_mode=TimeMode.REALTIME.value,
-            player_1_color=player_1_color,
+            color=color,
             variant=variant,
             minutes=minutes,
             increment=increment,
@@ -118,7 +118,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 ],
             ),
             create_option(
-                name="player_1_color",
+                name="color",
                 description="Color the first player to join will play (defaults to Random)",
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
@@ -134,7 +134,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         self,
         ctx: SlashContext,
         days: int = -1,
-        player_1_color: str = Color.RANDOM.value,
+        color: str = Color.RANDOM.value,
         variant: int = Variant.STANDARD.value,
     ):
         """Slash command: Create a game on Lichess with custom settings"""
@@ -144,7 +144,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             time_mode=(
                 TimeMode.CORRESPONDENCE.value if days > 0 else TimeMode.UNLIMITED.value
             ),
-            player_1_color=player_1_color,
+            color=color,
             variant=variant,
             days=(days if days > 0 else 2),  # days must be positive even if unused
         )
