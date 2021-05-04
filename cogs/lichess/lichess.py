@@ -11,7 +11,7 @@ __lichess_logo = "https://i.imgur.com/AA0Y84u.png"
 
 def __get_invite(
     time_mode: int,
-    start_color: str,
+    player_1_color: str,
     variant: int,
     minutes: int = 10,
     increment: int = 10,
@@ -26,7 +26,7 @@ def __get_invite(
         "time": minutes,  # only for real time
         "increment": increment,  # only for real time
         "days": days,  # only for correspondence
-        "color": start_color,
+        "color": player_1_color,
     }
     headers = {"User-Agent": "Mozilla/5.0"}
     response = requests.post(

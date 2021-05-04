@@ -25,7 +25,7 @@ class TimeMode(Enum):
 
 
 class Color(Enum):
-    """Lichess start colors"""
+    """Lichess possible player 1 colors"""
 
     WHITE = "white"
     BLACK = "black"

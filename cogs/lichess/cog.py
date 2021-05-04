@@ -34,17 +34,6 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 required=False,
             ),
             create_option(
-                name="start_color",
-                description="Color to go first (defaults to Random)",
-                option_type=SlashCommandOptionType.STRING,
-                required=False,
-                choices=[
-                    create_choice(name="Random", value=Color.RANDOM.value),
-                    create_choice(name="White", value=Color.WHITE.value),
-                    create_choice(name="Black", value=Color.BLACK.value),
-                ],
-            ),
-            create_option(
                 name="variant",
                 description="Chess variant (defaults to Standard)",
                 option_type=SlashCommandOptionType.INTEGER,
@@ -61,6 +50,17 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                     create_choice(name="Racing Kings", value=9),
                 ],
             ),
+            create_option(
+                name="player_1_color",
+                description="Color the first player to join will play (defaults to Random)",
+                option_type=SlashCommandOptionType.STRING,
+                required=False,
+                choices=[
+                    create_choice(name="Random", value=Color.RANDOM.value),
+                    create_choice(name="White", value=Color.WHITE.value),
+                    create_choice(name="Black", value=Color.BLACK.value),
+                ],
+            ),
         ],
     )
     async def play_live_slash(
@@ -68,7 +68,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         ctx: SlashContext,
         minutes: int = 10,
         increment: int = 10,
-        start_color: str = Color.RANDOM.value,
+        player_1_color: str = Color.RANDOM.value,
         variant: int = Variant.STANDARD.value,
     ):
         """Slash command: Create a live game on Lichess with custom settings"""
@@ -80,7 +80,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         await lichess.send_invite(
             ctx,
             time_mode=TimeMode.REALTIME.value,
-            start_color=start_color,
+            player_1_color=player_1_color,
             variant=variant,
             minutes=minutes,
             increment=increment,
@@ -101,17 +101,6 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 required=False,
             ),
             create_option(
-                name="start_color",
-                description="Color to go first (defaults to Random)",
-                option_type=SlashCommandOptionType.STRING,
-                required=False,
-                choices=[
-                    create_choice(name="Random", value=Color.RANDOM.value),
-                    create_choice(name="White", value=Color.WHITE.value),
-                    create_choice(name="Black", value=Color.BLACK.value),
-                ],
-            ),
-            create_option(
                 name="variant",
                 description="Chess variant (defaults to Standard)",
                 option_type=SlashCommandOptionType.INTEGER,
@@ -128,13 +117,24 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                     create_choice(name="Racing Kings", value=9),
                 ],
             ),
+            create_option(
+                name="player_1_color",
+                description="Color the first player to join will play (defaults to Random)",
+                option_type=SlashCommandOptionType.STRING,
+                required=False,
+                choices=[
+                    create_choice(name="Random", value=Color.RANDOM.value),
+                    create_choice(name="White", value=Color.WHITE.value),
+                    create_choice(name="Black", value=Color.BLACK.value),
+                ],
+            ),
         ],
     )
     async def play_daily_slash(
         self,
         ctx: SlashContext,
         days: int = -1,
-        start_color: str = Color.RANDOM.value,
+        player_1_color: str = Color.RANDOM.value,
         variant: int = Variant.STANDARD.value,
     ):
         """Slash command: Create a game on Lichess with custom settings"""
@@ -144,7 +144,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             time_mode=(
                 TimeMode.CORRESPONDENCE.value if days > 0 else TimeMode.UNLIMITED.value
             ),
-            start_color=start_color,
+            player_1_color=player_1_color,
             variant=variant,
             days=(days if days > 0 else 2),  # days must be positive even if unused
         )
