@@ -47,13 +47,13 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         guild_ids=[config.GUILD_ID],
         options=[
             create_option(
-                name="utc_time",
+                name="time",
                 description="UTC date or time to convert (eg. 29 May 3am)",
                 option_type=SlashCommandOptionType.STRING,
                 required=True,
             ),
             create_option(
-                name="to",
+                name="timezone",
                 description="Timezone that you want to convert to (eg. '-0500', 'EST')",
                 option_type=SlashCommandOptionType.STRING,
                 required=True,
@@ -90,7 +90,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         guild_ids=[config.GUILD_ID],
         options=[
             create_option(
-                name="date",
+                name="time",
                 description="Date or time to subtract (eg. 29 May 3am)",
                 option_type=SlashCommandOptionType.STRING,
                 required=True,

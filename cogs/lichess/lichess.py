@@ -44,10 +44,6 @@ def __get_invite(
     return title, redirect_url
 
 
-def __get_game_by_id(game_id: str) -> Dict[str, str]:
-    return lc.game(game_id[-8:])
-
-
 async def send_invite(ctx: SlashContext, **kwargs):
     footer = "The first two people to come to this URL will play"
     try:
@@ -93,7 +89,7 @@ def __game_status(game: Dict):
 
 async def send_game_status(ctx: SlashContext, game_id: str):
     try:
-        game = __get_game_by_id(game_id)
+        game = lc.game(game_id)
         player1 = game["players"]["white"]
         player2 = game["players"]["black"]
         status = __game_status(game)
