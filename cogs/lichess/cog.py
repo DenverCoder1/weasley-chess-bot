@@ -35,7 +35,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             ),
             create_option(
                 name="start_color",
-                description="Color to go first",
+                description="Color to go first (defaults to Random)",
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
@@ -46,7 +46,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             ),
             create_option(
                 name="variant",
-                description="Chess variant",
+                description="Chess variant (defaults to Standard)",
                 option_type=SlashCommandOptionType.INTEGER,
                 required=False,
                 choices=[
@@ -102,7 +102,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             ),
             create_option(
                 name="start_color",
-                description="Color to go first",
+                description="Color to go first (defaults to Random)",
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
@@ -113,7 +113,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             ),
             create_option(
                 name="variant",
-                description="Chess variant",
+                description="Chess variant (defaults to Standard)",
                 option_type=SlashCommandOptionType.INTEGER,
                 required=False,
                 choices=[
