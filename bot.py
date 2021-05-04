@@ -26,7 +26,9 @@ def main():
     async def on_ready():
         """When discord is connected"""
         print(f"{bot.user.name} has connected to Discord!")
-        activity = discord.Activity(type=discord.ActivityType.listening, name="w!help")
+        activity = discord.Activity(
+            type=discord.ActivityType.listening, name="slash commands"
+        )
         await bot.change_presence(activity=activity)
 
     # Run Discord bot
