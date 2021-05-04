@@ -23,6 +23,7 @@ def build_embed(
     description: Optional[str] = None,
     footer: Optional[str] = None,
     image: Optional[str] = None,
+    thumbnail: Optional[str] = None,
     url: Union[str, _EmptyEmbed] = EmptyEmbed,
     colour: discord.Colour = GINGER_COLOUR,
 ) -> discord.Embed:
@@ -35,4 +36,6 @@ def build_embed(
         embed.set_footer(text=__trim(footer, 2048))
     if image:
         embed.set_image(url=image)
+    if thumbnail:
+        embed.set_thumbnail(url=thumbnail)
     return embed
