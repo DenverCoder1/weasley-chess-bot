@@ -60,10 +60,10 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
             ),
         ],
     )
-    async def from_utc_slash(self, ctx: SlashContext, utc_time: str, to: str):
+    async def from_utc_slash(self, ctx: SlashContext, time: str, timezone: str):
         """Slash command: Convert a time from your timezone to UTC time."""
         await ctx.defer()
-        await timezones.from_utc(ctx, utc_time, to)
+        await timezones.from_utc(ctx, time, timezone)
 
     @commands.command(aliases=["fromUTC", "fromutc", "from"])
     async def from_utc(self, ctx: commands.Context, *args: str):
@@ -101,14 +101,20 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
             ),
+            create_option(
+                name="message",
+                description="Message to include along with the time difference",
+                option_type=SlashCommandOptionType.STRING,
+                required=False,
+            ),
         ],
     )
     async def time_diff_slash(
-        self, ctx: SlashContext, date: str, timezone: str = "UTC"
+        self, ctx: SlashContext, time: str, timezone: str = "UTC", message: str = ""
     ):
         """Slash command: Find a time difference"""
         await ctx.defer()
-        await timezones.time_diff(ctx, date, timezone)
+        await timezones.time_diff(ctx, time, timezone, message)
 
     @commands.command(aliases=["timeDiff", "timediff", "diff", "time_until", "td"])
     async def time_diff(self, ctx: commands.Context, *args: str):

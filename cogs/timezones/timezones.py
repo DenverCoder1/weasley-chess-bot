@@ -40,10 +40,11 @@ async def time_diff(
     ctx: Union[commands.Context, SlashContext],
     date_input: str,
     timezone: Optional[str] = None,
+    message: str = "",
 ):
     new_date = parse_date(date_input, from_tz=timezone, to_tz="UTC")
     if isinstance(new_date, datetime):
-        return await __send_diff_embed(ctx, new_date)
+        return await __send_diff_embed(ctx, new_date, message)
     # unable to parse date
     embed = error_embed(
         f"Sorry {ctx.author.name}, I didn't understand that.",
@@ -67,21 +68,21 @@ async def __send_time_embed(
 
 
 async def __send_diff_embed(
-    ctx: Union[commands.Context, SlashContext], date_output: datetime
+    ctx: Union[commands.Context, SlashContext], date_output: datetime, message: str = ""
 ):
     clock = get_clock_emoji(date_output)
-    difference = humanize.precisedelta(
+    delta_text = humanize.precisedelta(
         date_output - datetime.utcnow(),
         minimum_unit="seconds",
         format="%d",
     )
+    description = f"**{message}**\n" if message else ""
+    description += (
+        f"In {delta_text}" if date_output > datetime.utcnow() else f"{delta_text} ago"
+    )
     embed = build_embed(
         title=f"{clock} Time until {format_date(date_output)} UTC",
-        description=(
-            f"In {difference}"
-            if date_output > datetime.utcnow()
-            else f"{difference} ago"
-        ),
+        description=description,
     )
     await ctx.send(embed=embed)
 
