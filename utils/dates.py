@@ -12,6 +12,17 @@ def get_clock_emoji(time: datetime) -> str:
     ]
 
 
+def __fix_tz(text: str) -> str:
+    """Overrides certain timezones with more relevant ones"""
+    replacements = {
+        "BST": "+0100",  # British Summer Time
+        "IST": "+0530",  # Indian Standard Time
+    }
+    for timezone, offset in replacements.items():
+        text = re.sub(fr"\b{timezone}\b", offset, text, flags=re.IGNORECASE)
+    return text
+
+
 def parse_date(
     date_str: Optional[str] = None,
     from_tz: Optional[str] = None,
@@ -29,27 +40,15 @@ def parse_date(
     """
     if date_str is None:
         return None
-    # Override timezone abbreviations
-    date_str = re.sub(r" BST", " +0100", date_str, flags=re.IGNORECASE)
-    date_str = re.sub(r" IST", " +0530", date_str, flags=re.IGNORECASE)
     # set dateparser settings
     settings: Dict[str, Any] = {
         "RELATIVE_BASE": base.replace(tzinfo=None),
-        **({"TIMEZONE": from_tz} if from_tz else {}),
-        **({"TO_TIMEZONE": to_tz} if to_tz else {}),
+        **({"TIMEZONE": __fix_tz(from_tz)} if from_tz else {}),
+        **({"TO_TIMEZONE": __fix_tz(to_tz)} if to_tz else {}),
         **({"PREFER_DATES_FROM": "future"} if future else {}),
     }
     # parse the date with dateparser
-    date = dateparser.parse(date_str, settings=settings)
-    # make times PM if time is early in the day, base is PM, and no indication that AM was specified
-    if (
-        date
-        and date.hour < 8  # hour is before 8:00
-        and base.hour >= 12  # relative base is PM
-        and not "am" in date_str.lower()  # am is not specified
-        and not re.match(r"^2\d{3}-[01]\d-[0-3]\d\S*$", date_str)  # not in iso format
-    ):
-        date += timedelta(hours=12)
+    date = dateparser.parse(__fix_tz(date_str), settings=settings)
     # return the datetime object
     return date
 
