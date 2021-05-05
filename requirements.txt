@@ -5,3 +5,4 @@ dateparser==1.0.0
 humanize==3.5.0
 requests==2.25.1
 python-lichess==0.9
+play-lichess==0.0.3

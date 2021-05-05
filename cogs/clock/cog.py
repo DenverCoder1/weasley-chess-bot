@@ -4,7 +4,7 @@ from discord.errors import HTTPException
 from discord.ext import commands
 from discord.ext.tasks import loop
 
-from .clock_embed import clock_embed, get_or_create_embed
+from .clock_embed import clock_embed, get_or_create_message
 
 CHECK_INTERVAL_SECONDS = 60  # every 60 seconds
 
@@ -28,7 +28,7 @@ class Clock(commands.Cog, name="🕒 Clock"):
             await self.__message.edit(embed=clock_embed())
         except HTTPException:
             # if message doesn't exist, create a new one
-            self.__message = await get_or_create_embed(self.__bot, self.__channel)
+            self.__message = await get_or_create_message(self.__bot, self.__channel)
 
     @clock.before_loop
     async def clock_init(self) -> None:
@@ -40,7 +40,7 @@ class Clock(commands.Cog, name="🕒 Clock"):
             print("Couldn't find that channel.")
             return self.clock.cancel()
         # if channel exists, get the last message from the bot or create one
-        self.__message = await get_or_create_embed(self.__bot, self.__channel)
+        self.__message = await get_or_create_message(self.__bot, self.__channel)
 
 
 def setup(bot):

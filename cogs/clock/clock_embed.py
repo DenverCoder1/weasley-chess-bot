@@ -13,9 +13,9 @@ def clock_embed() -> discord.Embed:
     return build_embed(title=f"{clock} The current time is {format_date(now)} UTC")
 
 
-async def get_or_create_embed(
+async def get_or_create_message(
     bot: commands.Bot, channel: discord.TextChannel
-) -> discord.Embed:
+) -> discord.Message:
     # get message if there's one in the past 20 messages
     message = await channel.history(limit=20).get(author__id=bot.user.id)
     # create new message if there's none

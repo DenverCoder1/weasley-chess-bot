@@ -6,7 +6,7 @@ from discord_slash.utils.manage_commands import create_choice, create_option
 from utils.embedder import build_embed, error_embed
 
 from . import lichess
-from .options import Variant, TimeMode, Color
+from play_lichess.constants import Variant, TimeMode, Color
 
 
 class Lichess(commands.Cog, name="🐴 Lichess"):
@@ -36,18 +36,12 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             create_option(
                 name="variant",
                 description="Chess variant (defaults to Standard)",
-                option_type=SlashCommandOptionType.INTEGER,
+                option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name="Standard", value=1),
-                    create_choice(name="Crazyhouse", value=10),
-                    create_choice(name="Chess960", value=2),
-                    create_choice(name="King of the Hill", value=4),
-                    create_choice(name="Three-check", value=5),
-                    create_choice(name="Antichess", value=6),
-                    create_choice(name="Atomic", value=7),
-                    create_choice(name="Horde", value=8),
-                    create_choice(name="Racing Kings", value=9),
+                    create_choice(name=option.description, value=option.description)
+                    for option in list(Variant)
+                    if option != Variant.FROM_POSITION
                 ],
             ),
             create_option(
@@ -56,9 +50,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name="Random", value=Color.RANDOM.value),
-                    create_choice(name="White", value=Color.WHITE.value),
-                    create_choice(name="Black", value=Color.BLACK.value),
+                    create_choice(name=option.description, value=option.description)
+                    for option in list(Color)
                 ],
             ),
         ],
@@ -68,8 +61,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         ctx: SlashContext,
         minutes: int = 10,
         increment: int = 10,
-        color: str = Color.RANDOM.value,
-        variant: int = Variant.STANDARD.value,
+        color: str = Color.RANDOM.description,
+        variant: int = Variant.STANDARD.description,
     ):
         """Slash command: Create a live game on Lichess with custom settings"""
         await ctx.defer()
@@ -79,9 +72,9 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             )
         await lichess.send_invite(
             ctx,
-            time_mode=TimeMode.REALTIME.value,
-            color=color,
-            variant=variant,
+            time_mode=TimeMode.REALTIME,
+            color=Color.find(color),
+            variant=Variant.find(variant),
             minutes=minutes,
             increment=increment,
         )
@@ -103,18 +96,12 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             create_option(
                 name="variant",
                 description="Chess variant (defaults to Standard)",
-                option_type=SlashCommandOptionType.INTEGER,
+                option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name="Standard", value=1),
-                    create_choice(name="Crazyhouse", value=10),
-                    create_choice(name="Chess960", value=2),
-                    create_choice(name="King of the Hill", value=4),
-                    create_choice(name="Three-check", value=5),
-                    create_choice(name="Antichess", value=6),
-                    create_choice(name="Atomic", value=7),
-                    create_choice(name="Horde", value=8),
-                    create_choice(name="Racing Kings", value=9),
+                    create_choice(name=option.description, value=option.description)
+                    for option in list(Variant)
+                    if option != Variant.FROM_POSITION
                 ],
             ),
             create_option(
@@ -123,9 +110,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name="Random", value=Color.RANDOM.value),
-                    create_choice(name="White", value=Color.WHITE.value),
-                    create_choice(name="Black", value=Color.BLACK.value),
+                    create_choice(name=option.description, value=option.description)
+                    for option in list(Color)
                 ],
             ),
         ],
@@ -134,18 +120,16 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         self,
         ctx: SlashContext,
         days: int = -1,
-        color: str = Color.RANDOM.value,
-        variant: int = Variant.STANDARD.value,
+        color: str = Color.RANDOM.description,
+        variant: int = Variant.STANDARD.description,
     ):
         """Slash command: Create a game on Lichess with custom settings"""
         await ctx.defer()
         await lichess.send_invite(
             ctx,
-            time_mode=(
-                TimeMode.CORRESPONDENCE.value if days > 0 else TimeMode.UNLIMITED.value
-            ),
-            color=color,
-            variant=variant,
+            time_mode=TimeMode.CORRESPONDENCE if days > 0 else TimeMode.UNLIMITED,
+            color=Color.find(color),
+            variant=Variant.find(variant),
             days=(days if days > 0 else 2),  # days must be positive even if unused
         )
 
