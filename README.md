@@ -22,6 +22,6 @@ Discord bot for Weasley's Chess Club server
 
 ### 🐴 Lichess
 
-* **Play Live** (`/play live`) - Get a live game URL on Lichess with custom options - for standard 10|10, just type /play live
-* **Play Daily** (`/play daily`) - Get a correspondence or unlimited URL on Lichess - for unlimited time, just type /play daily
+* **Play Live** (`/play live`) - Get a live game URL on Lichess with custom options (default is standard 10+10)
+* **Play Daily** (`/play daily`) - Get a correspondence or unlimited URL on Lichess (default is unlimited time)
 * **Game Status** (`/game status`) - Get the status of a Lichess game
