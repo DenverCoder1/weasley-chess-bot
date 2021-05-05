@@ -3,8 +3,9 @@ import discord
 from discord.errors import HTTPException
 from discord.ext import commands
 from discord.ext.tasks import loop
+from datetime import datetime
 
-from .clock_embed import clock_embed, get_or_create_message
+from .clock import clock_embed, get_or_create_message, update_clock_channel_name
 
 CHECK_INTERVAL_SECONDS = 60  # every 60 seconds
 
@@ -29,6 +30,9 @@ class Clock(commands.Cog, name="🕒 Clock"):
         except HTTPException:
             # if message doesn't exist, create a new one
             self.__message = await get_or_create_message(self.__bot, self.__channel)
+        # update channel name every 10 minutes
+        if datetime.now().minute % 10 == 0:
+            await update_clock_channel_name(self.__channel)
 
     @clock.before_loop
     async def clock_init(self) -> None:

@@ -22,3 +22,11 @@ async def get_or_create_message(
     if not message:
         message = await channel.send(embed=clock_embed())
     return message
+
+
+async def update_clock_channel_name(channel: discord.TextChannel):
+    now = datetime.utcnow()
+    clock = get_clock_emoji(now)
+    await channel.edit(
+        name=f"clock︱{clock} {now.strftime('%H')}꞉{now.strftime('%M')} 𝖴𝖳𝖢"
+    )
