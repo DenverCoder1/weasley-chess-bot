@@ -5,9 +5,12 @@ from discord.ext import commands
 from discord.ext.tasks import loop
 from datetime import datetime
 
-from .clock import clock_embed, get_or_create_message, update_clock_channel_name
-
-CHECK_INTERVAL_SECONDS = 60  # every 60 seconds
+from .clock import (
+    clock_embed,
+    get_or_create_message,
+    new_channel_name,
+    get_embed_title,
+)
 
 
 class Clock(commands.Cog, name="🕒 Clock"):
@@ -21,18 +24,23 @@ class Clock(commands.Cog, name="🕒 Clock"):
         self.clock.start()
         print("Starting clock...")
 
-    @loop(seconds=CHECK_INTERVAL_SECONDS)
+    @loop(seconds=1)
     async def clock(self):
-        """loop to update clock"""
+        """Loop to check and update clock"""
+        # update the clock message
         try:
-            # update the clock
-            await self.__message.edit(embed=clock_embed())
+            embed = clock_embed()
+            # update only if the time is different
+            if embed.title != get_embed_title(self.__message):
+                # edit the message
+                await self.__message.edit(embed=embed)
         except HTTPException:
             # if message doesn't exist, create a new one
             self.__message = await get_or_create_message(self.__bot, self.__channel)
-        # update channel name every 10 minutes
-        if datetime.now().minute % 10 == 0:
-            await update_clock_channel_name(self.__channel)
+        # update channel name if it has changed
+        channel_name = new_channel_name()
+        if self.__channel.name != channel_name:
+            await self.__channel.edit(name=channel_name)
 
     @clock.before_loop
     async def clock_init(self) -> None:
