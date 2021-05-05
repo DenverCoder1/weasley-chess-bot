@@ -1,3 +1,4 @@
+import discord
 import config
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
@@ -96,12 +97,6 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
                 required=True,
             ),
             create_option(
-                name="timezone",
-                description="Timezone (eg. '-0500', 'EST') - defaults to UTC",
-                option_type=SlashCommandOptionType.STRING,
-                required=False,
-            ),
-            create_option(
                 name="message",
                 description="Message to include along with the time difference",
                 option_type=SlashCommandOptionType.STRING,
@@ -109,20 +104,23 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
             ),
         ],
     )
-    async def time_diff_slash(
-        self, ctx: SlashContext, time: str, timezone: str = "UTC", message: str = ""
-    ):
+    async def time_diff_slash(self, ctx: SlashContext, time: str, message: str = ""):
         """Slash command: Find a time difference"""
         await ctx.defer()
-        await timezones.time_diff(ctx, time, timezone, message)
+        await timezones.time_diff(ctx, time, message)
 
     @commands.command(aliases=["timeDiff", "timediff", "diff", "time_until", "td"])
     async def time_diff(self, ctx: commands.Context, *args: str):
         """Find a time difference
         ```
         w!timeDiff 5/29 13:00
+        w!timeDiff 5/29 13:00 "Message"
         ```
         """
+        # use the last argument as a message to display if it's in quotes
+        if ctx.message.content.find(f'"{args[-1]}"') > -1:
+            return await timezones.time_diff(ctx, " ".join(args[:-1]), args[-1])
+        # otherwise, use all of the arguments as the time
         await timezones.time_diff(ctx, " ".join(args))
 
     @cog_ext.cog_subcommand(

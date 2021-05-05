@@ -39,10 +39,9 @@ async def from_utc(
 async def time_diff(
     ctx: Union[commands.Context, SlashContext],
     date_input: str,
-    timezone: Optional[str] = None,
     message: str = "",
 ):
-    new_date = parse_date(date_input, from_tz=timezone, to_tz="UTC")
+    new_date = parse_date(date_input, to_tz="UTC")
     if isinstance(new_date, datetime):
         return await __send_diff_embed(ctx, new_date, message)
     # unable to parse date
@@ -68,20 +67,16 @@ async def __send_time_embed(
 
 
 async def __send_diff_embed(
-    ctx: Union[commands.Context, SlashContext], date_output: datetime, message: str = ""
+    ctx: Union[commands.Context, SlashContext], date: datetime, message: str = ""
 ):
-    clock = get_clock_emoji(date_output)
-    delta_text = humanize.precisedelta(
-        date_output - datetime.utcnow(),
-        minimum_unit="seconds",
-        format="%d",
-    )
+    date = date.replace(tzinfo=None)
+    now = datetime.utcnow().replace(tzinfo=None)
+    delta_text = humanize.precisedelta(date - now, minimum_unit="seconds", format="%d")
     description = f"**{message}**\n" if message else ""
-    description += (
-        f"In {delta_text}" if date_output > datetime.utcnow() else f"{delta_text} ago"
-    )
+    description += f"In {delta_text}" if date > now else f"{delta_text} ago"
+    clock = get_clock_emoji(date)
     embed = build_embed(
-        title=f"{clock} Time until {format_date(date_output)} UTC",
+        title=f"{clock} Time until {format_date(date)} UTC",
         description=description,
     )
     await ctx.send(embed=embed)
