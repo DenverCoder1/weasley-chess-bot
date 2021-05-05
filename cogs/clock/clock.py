@@ -31,7 +31,6 @@ async def get_or_create_message(
 def new_channel_name() -> str:
     """Insert the time rounded down to nearest 10 into channel name"""
     now = datetime.utcnow()
-    clock = get_clock_emoji(now)
     # round down to nearest 10
     rounded = now.replace(minute=now.minute // 10 * 10)
-    return f"clock︱{clock}-{rounded.strftime('%H꞉%M')}-𝖴𝖳𝖢"
+    return f"clock︱∼{rounded.strftime('%H꞉%M')}・𝖴𝖳𝖢"
