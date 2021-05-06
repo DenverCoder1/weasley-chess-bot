@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 from utils.dates import format_date, get_clock_emoji
 from utils.embedder import build_embed
+from art import text2art
 
 
 def get_embed_title(message: discord.Message) -> str:
@@ -14,7 +15,10 @@ def clock_embed() -> discord.Embed:
     """Generates embed with current time UTC"""
     now = datetime.utcnow()
     clock = get_clock_emoji(now)
-    return build_embed(title=f"{clock} The current time is {format_date(now)} UTC")
+    return build_embed(
+        title=f"{clock} The current time is {format_date(now)} UTC",
+        description=f"```{text2art(now.strftime('%H:%M'))}```",
+    )
 
 
 async def get_or_create_message(

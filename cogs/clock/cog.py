@@ -3,7 +3,6 @@ import discord
 from discord.errors import HTTPException
 from discord.ext import commands
 from discord.ext.tasks import loop
-from datetime import datetime
 
 from .clock import (
     clock_embed,
