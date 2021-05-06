@@ -16,7 +16,7 @@ def clock_embed() -> discord.Embed:
     now = datetime.utcnow()
     clock = get_clock_emoji(now)
     return build_embed(
-        title=f"{clock} The current time is {format_date(now)} UTC",
+        title=f"{clock} It is now {format_date(now)} UTC",
         description=f"```{text2art(now.strftime('%H:%M'))}```",
     )
 
