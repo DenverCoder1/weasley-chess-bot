@@ -1,0 +1,71 @@
+import re
+from typing import Dict
+from utils.logging import log_to_channel
+import discord
+from discord.ext import commands
+
+
+async def __extract_points_from_line(bot: commands.Bot, line: str) -> tuple[int]:
+    """Returns a tuple corresponding to points for Hogwarts, Beauxbatons, and Durmstrang"""
+    match = re.search(r"(\w+) p\w*ts? .*\b(each|[Hh]og\w*|[Bb]ea\w*|[Dd]ur\w*)\b", line)
+    if not match:
+        if not re.match(r"^[A-Z][a-z]+:(?: \d+)?", line) and line.strip() != "":
+            await log_to_channel(bot, f"ERROR: points not found: '{line}'")
+        return 0, 0, 0
+    points = int(match[1].replace("one", "1").replace("two", "2").replace("three", "3"))
+    if match[2] == "each":
+        hog = int(re.search(r"^[^|]+\([Hh]og\w*\)[^|]+\|", line) is not None)
+        beaux = int(re.search(r"^[^|]+\([Bb]ea\w*\)[^|]+\|", line) is not None)
+        durm = int(re.search(r"^[^|]+\([Dd]ur\w*\)[^|]+\|", line) is not None)
+        if hog + beaux + durm != 2:
+            await log_to_channel(bot, f"ERROR: more than 2 teams found: '{line}'")
+            return 0, 0, 0
+        return hog * points, beaux * points, durm * points
+    if re.match(r"[Hh]og\w*", match[2]):
+        return points, 0, 0
+    if re.match(r"[Bb]ea\w*", match[2]):
+        return 0, points, 0
+    if re.match(r"[Dd]ur\w*", match[2]):
+        return 0, 0, points
+    await log_to_channel(bot, f"ERROR: team not found: '{line}'")
+    return 0, 0, 0
+
+
+async def __calculate_totals(
+    bot: commands.Bot, channel: discord.TextChannel
+) -> Dict[str, int]:
+    """Count the scores of messages posted to scoreboard channel"""
+    totals = {
+        "Hog": 0,
+        "Beaux": 0,
+        "Durm": 0,
+    }
+    async for message in channel.history(limit=20):
+        lines = message.content.split("\n")
+        for line in lines:
+            hog, beaux, durm = await __extract_points_from_line(bot, line)
+            totals["Hog"] += hog
+            totals["Beaux"] += beaux
+            totals["Durm"] += durm
+    return totals
+
+
+def __to_sub(text: str) -> str:
+    return str(text).translate(str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉"))
+
+
+async def __new_channel_name(bot: commands.Bot, channel: discord.TextChannel) -> str:
+    """Count the scores of messages posted to scoreboard channel"""
+    totals = await __calculate_totals(bot, channel)
+    return f"score︱ʜ{__to_sub(totals['Hog'])}・ʙ{__to_sub(totals['Beaux'])}・ᴅ{__to_sub(totals['Durm'])}"
+
+
+async def check_and_update_channel(
+    message: discord.Message, bot: commands.Bot, channel: discord.TextChannel
+):
+    if message.channel.id != channel.id:
+        return
+    # update channel name if it has changed
+    channel_name = await __new_channel_name(bot, channel)
+    if channel.name != channel_name:
+        await channel.edit(name=channel_name)
