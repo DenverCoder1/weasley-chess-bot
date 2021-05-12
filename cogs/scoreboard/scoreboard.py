@@ -1,5 +1,5 @@
 import re
-from typing import Dict
+from typing import Dict, Optional
 from utils.logging import log_to_channel
 import discord
 from discord.ext import commands
@@ -7,7 +7,9 @@ from discord.ext import commands
 
 async def __extract_points_from_line(bot: commands.Bot, line: str) -> tuple[int]:
     """Returns a tuple corresponding to points for Hogwarts, Beauxbatons, and Durmstrang"""
-    match = re.search(r"(\w+) p\w*ts? .*\b(each|[Hh]og\w*|[Bb]ea\w*|[Dd]ur\w*)\b", line)
+    match = re.search(
+        r"\| (\w+) p\w*ts? .*\b(each|[Hh]og\w*|[Bb]ea\w*|[Dd]ur\w*)\b", line
+    )
     if not match:
         if not re.match(r"^[A-Z][a-z]+:(?: \d+)?", line) and line.strip() != "":
             await log_to_channel(bot, f"ERROR: points not found: '{line}'")
@@ -40,7 +42,7 @@ async def __calculate_totals(
         "Beaux": 0,
         "Durm": 0,
     }
-    async for message in channel.history(limit=20):
+    async for message in channel.history(limit=200):
         lines = message.content.split("\n")
         for line in lines:
             hog, beaux, durm = await __extract_points_from_line(bot, line)
@@ -61,9 +63,11 @@ async def __new_channel_name(bot: commands.Bot, channel: discord.TextChannel) ->
 
 
 async def check_and_update_channel(
-    message: discord.Message, bot: commands.Bot, channel: discord.TextChannel
+    bot: commands.Bot,
+    channel: discord.TextChannel,
+    message: Optional[discord.Message] = None,
 ):
-    if message.channel.id != channel.id:
+    if message and message.channel.id != channel.id:
         return
     # update channel name if it has changed
     channel_name = await __new_channel_name(bot, channel)
