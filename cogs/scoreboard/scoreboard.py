@@ -1,18 +1,21 @@
 import re
 from typing import Dict, Optional
-from utils.logging import log_to_channel
+
 import discord
 from discord.ext import commands
+from utils.logging import log_to_channel
+
+from .validation_error import ValidationError
 
 
-async def __extract_points_from_line(bot: commands.Bot, line: str) -> tuple[int]:
+async def __extract_points_from_line(line: str) -> tuple[int]:
     """Returns a tuple corresponding to points for Hogwarts, Beauxbatons, and Durmstrang"""
     match = re.search(
         r"\| (\w+) p\w*ts? .*\b(each|[Hh]og\w*|[Bb]ea\w*|[Dd]ur\w*)\b", line
     )
     if not match:
         if not re.match(r"^[A-Z][a-z]+:(?: \d+)?", line) and line.strip() != "":
-            await log_to_channel(bot, f"ERROR: points not found: '{line}'")
+            raise ValidationError(f"ERROR: points not found: '{line}'")
         return 0, 0, 0
     points = int(match[1].replace("one", "1").replace("two", "2").replace("three", "3"))
     if match[2] == "each":
@@ -20,8 +23,7 @@ async def __extract_points_from_line(bot: commands.Bot, line: str) -> tuple[int]
         beaux = int(re.search(r"^[^|]+\([Bb]ea\w*\)[^|]+\|", line) is not None)
         durm = int(re.search(r"^[^|]+\([Dd]ur\w*\)[^|]+\|", line) is not None)
         if hog + beaux + durm != 2:
-            await log_to_channel(bot, f"ERROR: more than 2 teams found: '{line}'")
-            return 0, 0, 0
+            raise ValidationError(f"ERROR: more than 2 teams found: '{line}'")
         return hog * points, beaux * points, durm * points
     if re.match(r"[Hh]og\w*", match[2]):
         return points, 0, 0
@@ -29,8 +31,7 @@ async def __extract_points_from_line(bot: commands.Bot, line: str) -> tuple[int]
         return 0, points, 0
     if re.match(r"[Dd]ur\w*", match[2]):
         return 0, 0, points
-    await log_to_channel(bot, f"ERROR: team not found: '{line}'")
-    return 0, 0, 0
+    raise ValidationError(f"ERROR: team not found: '{line}'")
 
 
 async def __calculate_totals(
@@ -42,13 +43,19 @@ async def __calculate_totals(
         "Beaux": 0,
         "Durm": 0,
     }
+    first = True
     async for message in channel.history(limit=200):
         lines = message.content.split("\n")
         for line in lines:
-            hog, beaux, durm = await __extract_points_from_line(bot, line)
-            totals["Hog"] += hog
-            totals["Beaux"] += beaux
-            totals["Durm"] += durm
+            try:
+                hog, beaux, durm = await __extract_points_from_line(line)
+                totals["Hog"] += hog
+                totals["Beaux"] += beaux
+                totals["Durm"] += durm
+            except ValidationError as err:
+                if first:
+                    await log_to_channel(bot, err.message)
+        first = False
     return totals
 
 
