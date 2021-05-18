@@ -4,6 +4,6 @@ discord-py-slash-command==1.1.2
 dateparser==1.0.0
 humanize==3.5.0
 requests==2.25.1
-python-lichess==0.9
+python-lichess==0.10
 play-lichess==0.1.1
 art==5.2
