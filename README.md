@@ -7,6 +7,7 @@ Discord bot for Weasley's Chess Club server
 ### 🕐 Tasks
 
 * **Clock** - Displays the current UTC time in a clock channel
+* **Scoreboard** - Updates channel name with the current points when messages are updated in the scoreboard channel
 
 ### ⏲️ Timezones
 
