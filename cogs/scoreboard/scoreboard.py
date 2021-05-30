@@ -52,10 +52,11 @@ async def __calculate_totals(
                 totals["Hog"] += hog
                 totals["Beaux"] += beaux
                 totals["Durm"] += durm
-                try:
-                    await message.remove_reaction("🤔", bot.user)
-                except Exception:
-                    pass
+                if any(r.emoji == "🤔" for r in message.reactions):
+                    try:
+                        await message.remove_reaction("🤔", bot.user)
+                    except Exception:
+                        pass
             except ValidationError as err:
                 await message.add_reaction("🤔")
                 if first:
