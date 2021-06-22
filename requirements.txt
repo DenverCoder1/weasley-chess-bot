@@ -1,6 +1,7 @@
 discord.py==1.7.2
 python-dotenv==0.17.1
 discord-py-slash-command==1.2.0
+discord-components @ git+https://github.com/kiki7000/discord.py-components.git@bee43ce1f23d2920a2472d1fbf27413dc8401111
 dateparser==1.0.0
 humanize==3.6.0
 requests==2.25.1

@@ -18,3 +18,6 @@ SCOREBOARD_CHANNEL_ID = int(os.getenv("SCOREBOARD_CHANNEL_ID"))
 
 # Logging channel
 LOGGING_CHANNEL_ID = int(os.getenv("LOGGING_CHANNEL_ID"))
+
+# JSON Match API endpoint
+JSON_API_ENDPOINT = os.getenv("JSON_API_ENDPOINT")
