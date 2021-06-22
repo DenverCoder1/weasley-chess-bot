@@ -2,7 +2,7 @@ import discord
 from typing import Optional, Union
 from discord.embeds import EmptyEmbed, _EmptyEmbed
 
-GINGER_COLOUR = discord.Color(int("B06500", 16))
+GINGER_COLOUR = discord.Color(0xB06500)
 
 
 def __trim(text: str, limit: int) -> str:
