@@ -3,7 +3,7 @@ python-dotenv==0.18.0
 discord-py-slash-command==2.0.4
 dateparser==1.0.0
 humanize==3.10.0
-requests==2.25.1
+requests==2.26.0
 python-lichess==0.10
 play-lichess==0.1.1
 art==5.2
