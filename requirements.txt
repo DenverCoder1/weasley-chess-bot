@@ -6,4 +6,4 @@ humanize==3.11.0
 requests==2.26.0
 python-lichess==0.10
 play-lichess==0.1.1
-art==5.2
+art==5.3
