@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
 from discord_slash.model import SlashCommandOptionType
 from discord_slash.utils.manage_commands import create_choice, create_option
-from utils.embedder import build_embed, error_embed
+from utils.embedder import error_embed
 
 from . import lichess
 from play_lichess.constants import Variant, TimeMode, Color
