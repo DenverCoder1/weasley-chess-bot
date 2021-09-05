@@ -6,18 +6,15 @@ from discordTogether import DiscordTogether
 import config
 
 
-class ChessTogetherCog(commands.Cog):
-    def __init__(self, client):
-        self.client = client
-        self.togetherControl = DiscordTogether(client)
-        # Alternatively, you can also use a bot variable to store and use DiscordTogether functions.
+class DiscordTogetherCog(commands.Cog, name="Discord Together"):
+    def __init__(self, bot: commands.Bot):
+        self.__dt = DiscordTogether(bot)
 
     async def _start_activity(self, ctx: SlashContext, name: str):
         if ctx.author.voice is None:
-            await ctx.send("You must be in a voice channel to start an activity.")
-            return
+            return await ctx.send("You must be in a voice channel to start an activity.")
         # Here we consider that the user is already in a VC accessible to the bot.
-        link = await self.togetherControl.create_link(ctx.author.voice.channel.id, name)
+        link = await self.__dt.create_link(ctx.author.voice.channel.id, name)
         await ctx.send(f"Click the blue link!\n{link}")
 
     @cog_ext.cog_subcommand(
@@ -55,4 +52,4 @@ class ChessTogetherCog(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(ChessTogetherCog(client))
+    client.add_cog(DiscordTogetherCog(client))
