@@ -7,4 +7,4 @@ requests==2.26.0
 python-lichess==0.10
 play-lichess==0.1.2
 art==5.3
-discord-together==1.1.1
+discord-together==1.1.2
