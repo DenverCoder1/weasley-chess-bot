@@ -4,11 +4,6 @@ Discord bot for Weasley's Chess Club server
 
 ## Features
 
-### 🕐 Tasks
-
-* **Clock** - Displays the current UTC time in a clock channel
-* **Scoreboard** - Updates channel name with the current points when messages are updated in the scoreboard channel
-
 ### ⏲️ Timezones
 
 * **Convert to UTC** (`/to utc`) - Convert date/time to UTC given the timezone
@@ -26,3 +21,10 @@ Discord bot for Weasley's Chess Club server
 * **Play Live** (`/play live`) - Get a live game URL on Lichess with custom options (default is standard 10+10)
 * **Play Daily** (`/play daily`) - Get a correspondence or unlimited URL on Lichess (default is unlimited time)
 * **Game Status** (`/game status`) - Get the status of a Lichess game
+
+### 🕐 Tasks
+
+**Note: Weasley Chess Club server only**
+
+* **Clock** - Displays the current UTC time in a clock channel
+* **Scoreboard** - Updates channel name with the current points when messages are updated in the scoreboard channel
