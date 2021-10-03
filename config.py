@@ -7,8 +7,12 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 BOT_PREFIX = "w!"
 
-# Guild
-GUILD_ID = int(os.getenv("GUILD_ID"))
+# Creates an integer ID list from a comma-separated string of IDs
+GUILD_IDS = [
+    int(gid)
+    for gid in os.getenv("GUILD_IDS", "").split(",")
+    if gid.isdigit()
+] or None
 
 # Clock channel
 CLOCK_CHANNEL_ID = int(os.getenv("CLOCK_CHANNEL_ID"))

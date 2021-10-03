@@ -17,7 +17,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         base="to",
         name="utc",
         description=("Convert a date/time to UTC"),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="time",
@@ -45,7 +45,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         base="from",
         name="utc",
         description=("Convert a date/time to your timezone from UTC"),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="time",
@@ -88,7 +88,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         base="time",
         name="diff",
         description=("Get the amount of time until a date occurs"),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="time",
@@ -127,7 +127,7 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         base="tz",
         name="info",
         description=("Get information about a timezone"),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="timezone",
