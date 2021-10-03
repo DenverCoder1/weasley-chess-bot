@@ -21,7 +21,7 @@ class DiscordTogetherCog(commands.Cog, name="Discord Together"):
         base="vc",
         name="chess",
         description=("Start a game of Chess in the Park"),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
     )
     async def vc_chess_slash(self, ctx: SlashContext):
         await self._start_activity(ctx, "chess")
@@ -30,7 +30,7 @@ class DiscordTogetherCog(commands.Cog, name="Discord Together"):
         base="vc",
         name="activity",
         description=("Start a voice channel activity"),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="activity",

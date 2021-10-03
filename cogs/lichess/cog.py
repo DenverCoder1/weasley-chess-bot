@@ -17,19 +17,19 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         base="play",
         name="live",
         description=(
-            "Get a live game URL on Lichess - for standard 10|10, just type /play live"
+            "Get a live game URL on Lichess - for blitz 5+0, just type /play live"
         ),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="minutes",
-                description="Minutes on the clock (defaults to 10)",
+                description="Minutes on the clock (defaults to 5)",
                 option_type=SlashCommandOptionType.INTEGER,
                 required=False,
             ),
             create_option(
                 name="increment",
-                description="Seconds to increment clock each turn (defaults to 10)",
+                description="Seconds to increment clock each turn (defaults to 0)",
                 option_type=SlashCommandOptionType.INTEGER,
                 required=False,
             ),
@@ -39,7 +39,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name=option.description, value=option.description)
+                    create_choice(name=option.description,
+                                  value=option.description)
                     for option in list(Variant)
                     if option != Variant.FROM_POSITION
                 ],
@@ -50,7 +51,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name=option.description, value=option.description)
+                    create_choice(name=option.description,
+                                  value=option.description)
                     for option in list(Color)
                 ],
             ),
@@ -59,8 +61,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
     async def play_live_slash(
         self,
         ctx: SlashContext,
-        minutes: int = 10,
-        increment: int = 10,
+        minutes: int = 5,
+        increment: int = 0,
         color: str = Color.RANDOM.description,
         variant: int = Variant.STANDARD.description,
     ):
@@ -68,7 +70,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         await ctx.defer()
         if minutes < 0 or increment < 0:
             return await ctx.send(
-                embed=error_embed("Minutes and increment must be positive")
+                embed=error_embed("Minutes and increment must be non-negative")
             )
         await lichess.send_invite(
             ctx,
@@ -85,7 +87,7 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         description=(
             "Get a correspondence or unlimited URL on Lichess - for unlimited time, just type /play daily"
         ),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="days",
@@ -99,7 +101,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name=option.description, value=option.description)
+                    create_choice(name=option.description,
+                                  value=option.description)
                     for option in list(Variant)
                     if option != Variant.FROM_POSITION
                 ],
@@ -110,7 +113,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
                 option_type=SlashCommandOptionType.STRING,
                 required=False,
                 choices=[
-                    create_choice(name=option.description, value=option.description)
+                    create_choice(name=option.description,
+                                  value=option.description)
                     for option in list(Color)
                 ],
             ),
@@ -130,14 +134,15 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
             time_mode=TimeMode.CORRESPONDENCE if days > 0 else TimeMode.UNLIMITED,
             color=Color.find(color),
             variant=Variant.find(variant),
-            days=(days if days > 0 else 2),  # days must be positive even if unused
+            # days must be positive even if unused
+            days=(days if days > 0 else 2),
         )
 
     @cog_ext.cog_subcommand(
         base="game",
         name="status",
         description=("Get the status of a Lichess game"),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="game_id",
@@ -151,7 +156,8 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
         """Slash command: Create a game on Lichess with custom settings"""
         await ctx.defer()
         # strip non alphanumeric characters
-        game_id = "".join(ch for ch in game_id if ch.isalpha() or ch.isdigit())[-8:]
+        game_id = "".join(ch for ch in game_id if ch.isalpha()
+                          or ch.isdigit())[-8:]
         await lichess.send_game_status(ctx, game_id)
 
 

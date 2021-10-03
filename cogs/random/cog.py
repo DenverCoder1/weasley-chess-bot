@@ -15,7 +15,7 @@ class Random(commands.Cog, name="🎲 Random"):
         base="coin",
         name="flip",
         description=("Flip a coin."),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[],
     )
     async def coin_flip_slash(self, ctx: SlashContext):
@@ -23,7 +23,8 @@ class Random(commands.Cog, name="🎲 Random"):
         await flip_coin(ctx)
 
     @commands.command(
-        aliases=["flip", "coin", "coinflip", "flipcoin", "flip_coin", "cf", "fc"]
+        aliases=["flip", "coin", "coinflip",
+                 "flipcoin", "flip_coin", "cf", "fc"]
     )
     async def coin_flip(self, ctx: commands.Context):
         """Replies with "Heads" or "Tails" at random.
@@ -37,7 +38,7 @@ class Random(commands.Cog, name="🎲 Random"):
         base="pawn",
         name="swap",
         description=("Swap pawns between two players."),
-        guild_ids=[config.GUILD_ID],
+        guild_ids=config.GUILD_IDS,
         options=[
             create_option(
                 name="player_1",
@@ -58,7 +59,8 @@ class Random(commands.Cog, name="🎲 Random"):
         await swap_pawns(ctx, player_1, player_2)
 
     @commands.command(
-        aliases=["pawn", "swap", "swappawns", "pawnswap", "swap_pawns", "ps", "sp"]
+        aliases=["pawn", "swap", "swappawns",
+                 "pawnswap", "swap_pawns", "ps", "sp"]
     )
     async def pawn_swap(self, ctx: commands.Context, player_1: str, player_2: str):
         """Takes names of both players and assigns "White" to one and "Black" to the other.
