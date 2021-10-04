@@ -1,3 +1,4 @@
+from typing import Optional
 import config
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
@@ -56,11 +57,11 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
                 name="to_timezone",
                 description="Timezone that you want to convert to (eg. '-0500', 'EST')",
                 option_type=SlashCommandOptionType.STRING,
-                required=True,
+                required=False,
             ),
         ],
     )
-    async def from_utc_slash(self, ctx: SlashContext, time: str, to_timezone: str):
+    async def from_utc_slash(self, ctx: SlashContext, time: str, to_timezone: Optional[str] = None):
         """Slash command: Convert a time from your timezone to UTC time."""
         await ctx.defer()
         await timezones.from_utc(ctx, time, to_timezone)
@@ -72,8 +73,11 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         w!fromUTC 5/29 13:00 to MST
         ```
         """
+        text = " ".join(args)
+        if not " to " in text:
+            return await timezones.from_utc(ctx, text)
         try:
-            [utc_time, to] = " ".join(args).split(" to ", 1)
+            [utc_time, to] = text.split(" to ", 1)
             await timezones.from_utc(ctx, utc_time, to)
         except ValueError:
             # unable to split date
