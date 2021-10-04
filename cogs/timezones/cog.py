@@ -1,4 +1,3 @@
-import discord
 import config
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
@@ -105,13 +104,13 @@ class Timezones(commands.Cog, name="⏲️ Timezones"):
         ],
     )
     async def time_diff_slash(self, ctx: SlashContext, time: str, message: str = ""):
-        """Slash command: Find a time difference"""
+        """Slash command: Find how much longer until a specified time"""
         await ctx.defer()
         await timezones.time_diff(ctx, time, message)
 
     @commands.command(aliases=["timeDiff", "timediff", "diff", "time_until", "td"])
     async def time_diff(self, ctx: commands.Context, *args: str):
-        """Find a time difference
+        """Find how much longer until a specified time
         ```
         w!timeDiff 5/29 13:00
         w!timeDiff 5/29 13:00 "Message"

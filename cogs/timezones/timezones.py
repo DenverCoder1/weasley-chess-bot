@@ -1,11 +1,11 @@
 from datetime import datetime
-from typing import Optional, Union
+from typing import Union
 
-import humanize
 from discord.ext import commands
 from discord_slash.context import SlashContext
 from utils.dates import format_date, get_clock_emoji, parse_date
 from utils.embedder import build_embed, error_embed
+from utils.timestamps import Timestamp, TimestampFormat
 
 
 async def to_utc(ctx: Union[commands.Context, SlashContext], date_input: str):
@@ -69,11 +69,8 @@ async def __send_time_embed(
 async def __send_diff_embed(
     ctx: Union[commands.Context, SlashContext], date: datetime, message: str = ""
 ):
-    date = date.replace(tzinfo=None)
-    now = datetime.utcnow().replace(tzinfo=None)
-    delta_text = humanize.precisedelta(date - now, minimum_unit="seconds", format="%d")
     description = f"**{message}**\n" if message else ""
-    description += f"In {delta_text}" if date > now else f"{delta_text} ago"
+    description += Timestamp(date).format(TimestampFormat.RELATIVE_TIME)
     clock = get_clock_emoji(date)
     embed = build_embed(
         title=f"{clock} Time until {format_date(date)} UTC",
