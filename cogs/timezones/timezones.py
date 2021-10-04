@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import Union
+import datetime
+from typing import Optional, Union
 
 from discord.ext import commands
 from discord_slash.context import SlashContext
@@ -11,7 +11,7 @@ from utils.timestamps import Timestamp, TimestampFormat
 async def to_utc(ctx: Union[commands.Context, SlashContext], date_input: str):
     # parse the date
     new_date = parse_date(date_input, to_tz="UTC")
-    if isinstance(new_date, datetime) and parse_date(date_input).tzinfo:
+    if isinstance(new_date, datetime.datetime) and parse_date(date_input).tzinfo:
         return await __send_time_embed(ctx, new_date, date_input)
     # unable to parse date
     embed = error_embed(
@@ -22,11 +22,16 @@ async def to_utc(ctx: Union[commands.Context, SlashContext], date_input: str):
 
 
 async def from_utc(
-    ctx: Union[commands.Context, SlashContext], date_str: str, to_tz: str
+    ctx: Union[commands.Context, SlashContext], date_str: str, to_tz: Optional[str] = None
 ):
-    new_date = parse_date(date_str, from_tz="UTC", to_tz=to_tz)
-    if isinstance(new_date, datetime):
+    new_date = parse_date(date_str, from_tz="UTC", to_tz=to_tz or "UTC")
+    if isinstance(new_date, datetime.datetime):
         date_input = date_str if "UTC" in date_str else f"{date_str} (UTC)"
+        # display discord timestamp for all timezones if no timezone is specified
+        if not to_tz:
+            new_date = new_date.replace(tzinfo=datetime.timezone.utc)
+            return await __send_timestamp(ctx, new_date, date_input)
+        # convert to another timezone
         return await __send_time_embed(ctx, new_date, date_input, to_tz)
     # unable to parse date
     embed = error_embed(
@@ -42,7 +47,7 @@ async def time_diff(
     message: str = "",
 ):
     new_date = parse_date(date_input, to_tz="UTC")
-    if isinstance(new_date, datetime):
+    if isinstance(new_date, datetime.datetime):
         return await __send_diff_embed(ctx, new_date, message)
     # unable to parse date
     embed = error_embed(
@@ -54,7 +59,7 @@ async def time_diff(
 
 async def __send_time_embed(
     ctx: Union[commands.Context, SlashContext],
-    date_output: datetime,
+    date_output: datetime.datetime,
     date_input: str,
     timezone: str = "UTC",
 ):
@@ -66,8 +71,19 @@ async def __send_time_embed(
     await ctx.send(embed=embed)
 
 
+async def __send_timestamp(
+    ctx: Union[commands.Context, SlashContext], date_output: datetime.datetime, date_input: str
+):
+    clock = get_clock_emoji(date_output)
+    embed = build_embed(
+        title=f"{clock} {Timestamp(date_output).format(TimestampFormat.LONG_DATE_TIME)}",
+        description=(f'Converted from "{date_input}"'),
+    )
+    await ctx.send(embed=embed)
+
+
 async def __send_diff_embed(
-    ctx: Union[commands.Context, SlashContext], date: datetime, message: str = ""
+    ctx: Union[commands.Context, SlashContext], date: datetime.datetime, message: str = ""
 ):
     description = f"**{message}**\n" if message else ""
     description += Timestamp(date).format(TimestampFormat.RELATIVE_TIME)
@@ -81,7 +97,7 @@ async def __send_diff_embed(
 
 async def send_tzinfo(ctx: Union[commands.Context, SlashContext], timezone: str):
     date = parse_date(f"12am {timezone}")
-    if isinstance(date, datetime):
+    if isinstance(date, datetime.datetime):
         embed = build_embed(
             title=f'Timezone offset for "{timezone}"',
             description=f"Name: {date.strftime('%Z')}\nUTC Offset: {date.strftime('%z')}",
