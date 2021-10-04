@@ -3,10 +3,10 @@ from discord.ext import commands
 from discord_slash import SlashContext, cog_ext
 from discord_slash.model import SlashCommandOptionType
 from discord_slash.utils.manage_commands import create_choice, create_option
+from play_lichess.constants import Color, TimeMode, Variant
 from utils.embedder import error_embed
 
 from . import lichess
-from play_lichess.constants import Variant, TimeMode, Color
 
 
 class Lichess(commands.Cog, name="🐴 Lichess"):
@@ -155,9 +155,10 @@ class Lichess(commands.Cog, name="🐴 Lichess"):
     async def game_status_slash(self, ctx: SlashContext, game_id: str):
         """Slash command: Create a game on Lichess with custom settings"""
         await ctx.defer()
+        # remove lichess.org from game_id
+        game_id = game_id.replace("https://lichess.org/", "")
         # strip non alphanumeric characters
-        game_id = "".join(ch for ch in game_id if ch.isalpha()
-                          or ch.isdigit())[-8:]
+        game_id = "".join(char for char in game_id if char.isalnum())[:8]
         await lichess.send_game_status(ctx, game_id)
 
 
