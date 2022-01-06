@@ -1,6 +1,6 @@
 discord.py==1.7.3
 python-dotenv==0.19.2
-discord-py-slash-command==3.0.1
+discord-py-slash-command==3.0.3
 dateparser==1.1.0
 requests==2.27.1
 python-lichess==0.10
